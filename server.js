@@ -1,15 +1,24 @@
 const express = require('express');
+const path = require('path');
 
 const app = express();
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 // API Routes
-const boats = require('./routes/api/boats');
-const online = require('./routes/api/online');
+app.use('/api/boats', require('./routes/api/boats'));
+app.use('/api/online', require('./routes/api/online'));
 
-app.use('/api/boats', boats);
-app.use('/api/online', online);
+// Serve static assets in production
+if (process.env.NODE_ENV === 'production') {
+    // Set static folder
+    app.use(express.static('client/build'));
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}.`);
-})
+    // Return react frontend
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname,'client', 'build', 'index.html'));
+    })
+}
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}.`);
+});
