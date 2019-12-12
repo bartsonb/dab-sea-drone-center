@@ -64,7 +64,7 @@ export class Boats extends Component<BoatsProps, BoatsState> {
         fetch('/api/boats', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 id: this.state.id,
@@ -72,8 +72,15 @@ export class Boats extends Component<BoatsProps, BoatsState> {
             })
         })
             .then(response => {
-
-            });
+                this.api('api/boats')
+                .then(response => this.setState({
+                    loading: false,
+                    boats: response
+                }));
+            })
+            .catch(error => this.setState({
+                error: true
+            }))
     }
 
     changeId(event: any): void {

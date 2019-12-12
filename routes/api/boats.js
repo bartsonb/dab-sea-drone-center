@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-let boatDB = [
+let database = [
     {
         id: 1,
         commands: [ 'MOVE', 'LEFT' ]
@@ -16,7 +16,7 @@ let boatDB = [
 // @desc    Get information of all boats.
 // @access  Public
 module.exports = router.get('/', (req, res) => {
-    res.json(boatDB);
+    res.json(database);
 });
 
 // @route   POST api/boats/
@@ -25,15 +25,17 @@ module.exports = router.get('/', (req, res) => {
 module.exports = router.post('/', (req, res) => {
     let { id, command } = req.body;
 
-    if ('id' in req.body && 'command' in req.body) {
-        let boat = boatDB.filter(boat => boat.id === id);
+    if (
+        req.body.id !== 'undefined' && req.body.command !== 'undefined' &&
+        req.body.id !== null && req.body.command !== null
+    ) {
+        let boat = database.find(boat => boat.id === parseInt(id));
 
-        if (boat instanceof Object) {
-            boat.commands.push(command);
-        } else {
-            boatDB.push({ id: id, command: command })
-        }
+        if (boat !== undefined) boat.commands.push(command);
+
+        res.json(boat);
+    } else {
+        console.log('Unprocessable Entity');
+        res.status(422).end();
     }
-
-    res.json({ success: false });
 });
