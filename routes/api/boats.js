@@ -20,6 +20,15 @@ module.exports = router.get('/', (req, res) => {
     res.json(database);
 });
 
+// @route   GET api/boats/:id
+// @desc    Get information of all boats.
+// @access  Public
+module.exports = router.get('/:id', [
+    check('id').isNumeric().isIn(database.map(boat => boat.id))
+],(req, res) => {
+    res.json(database.find(boat => boat.id === req.params.id));
+});
+
 // @route   POST api/boats/
 // @desc    Parsing and saving commands for boats.
 // @access  Public
