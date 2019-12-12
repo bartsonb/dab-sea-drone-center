@@ -24,8 +24,8 @@ export class Boats extends Component<BoatsProps, BoatsState> {
 
         this.state = {
             boats: [],
-            command: null,
-            id: null,
+            command: 'MOVE_STRAIGHT',
+            id: 1,
             availableCommands: [],
             loading: true,
             error: false
@@ -74,7 +74,6 @@ export class Boats extends Component<BoatsProps, BoatsState> {
             .then(response => {
                 this.api('api/boats')
                 .then(response => this.setState({
-                    loading: false,
                     boats: response
                 }));
             })

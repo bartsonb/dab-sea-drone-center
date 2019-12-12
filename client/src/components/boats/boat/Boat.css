@@ -1,7 +1,13 @@
-.boat div p {
-    padding: 0 0 0 15px;
+.boat h2 {
+    font-weight: bold;
 }
 
 .boat:not(:last-child) {
-    margin: 0 0 12px 0;
+    margin: 0 0 20px 0;
+}
+
+.boat ul li {
+    padding: 0 0 0 15px;
+    font-style: italic;
+    list-style-type: none;
 }

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { check, validationResult } = require('express-validator');
 
 let database = [
     {
@@ -22,20 +23,22 @@ module.exports = router.get('/', (req, res) => {
 // @route   POST api/boats/
 // @desc    Parsing and saving commands for boats.
 // @access  Public
-module.exports = router.post('/', (req, res) => {
-    let { id, command } = req.body;
+module.exports = router.post('/', [
+    check('id').isNumeric().isIn(database.map(boat => boat.id)),
+    check('command').isString().isIn([
+        'MOVE_STRAIGHT',
+        'MOVE_LEFT',
+        'MOVE_RIGHT',
+        'STOP',
+        'RETURN_HOME'
+    ])
+], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(422).json({ errors: errors.array() });
 
-    if (
-        req.body.id !== 'undefined' && req.body.command !== 'undefined' &&
-        req.body.id !== null && req.body.command !== null
-    ) {
-        let boat = database.find(boat => boat.id === parseInt(id));
+    let boat = database.forEach(boat => {
+        if (boat.id === parseInt(req.body.id)) boat.commands.push(req.body.command)
+    });
 
-        if (boat !== undefined) boat.commands.push(command);
-
-        res.json(boat);
-    } else {
-        console.log('Unprocessable Entity');
-        res.status(422).end();
-    }
+    res.json(boat);
 });

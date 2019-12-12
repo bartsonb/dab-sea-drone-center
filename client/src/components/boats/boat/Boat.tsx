@@ -9,8 +9,8 @@ export interface BoatProps {
 export const Boat = (props: BoatProps) => {
     return (
         <div className='boat'>
-            <h3>Boat ({ props.id })</h3>
-            <div>commands: { props.commands.map((command, index) => <p key={index}>{command}</p>) }</div>
+            <h2>Boat ({ props.id })</h2>
+            <ul>{ props.commands.map((command, index) => <li key={index}>{command}</li>) }</ul>
         </div>
     )
 };
