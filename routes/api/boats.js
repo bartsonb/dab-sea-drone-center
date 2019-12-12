@@ -36,9 +36,10 @@ module.exports = router.post('/', [
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(422).json({ errors: errors.array() });
 
-    let boat = database.forEach(boat => {
-        if (boat.id === parseInt(req.body.id)) boat.commands.push(req.body.command)
+    database.forEach(boat => {
+        if (boat.id === parseInt(req.body.id)) {
+            boat.commands.push(req.body.command);
+            res.json(boat);
+        }
     });
-
-    res.json(boat);
 });
