@@ -23,10 +23,17 @@ module.exports = router.get('/', (req, res) => {
 // @route   GET api/boats/:id
 // @desc    Get information of all boats.
 // @access  Public
-module.exports = router.get('/:id', [
-    check('id').isNumeric().isIn(database.map(boat => boat.id))
-],(req, res) => {
-    res.json(database.find(boat => boat.id === req.params.id));
+module.exports = router.get('/:id',  [
+        check('id', 'Boat not found.').toInt().isIn(database.map(boat => boat.id))
+    ], (req, res) => {
+    if (!validationResult(req).isEmpty()) return res.status(422).json({ errors: validationResult(req).array() });
+
+    // Respond with boat
+    let boat = database.find(boat => boat.id === req.params.id);
+    res.json(boat);
+
+    // Clear command array
+    boat.commands = [];
 });
 
 // @route   POST api/boats/
@@ -42,8 +49,7 @@ module.exports = router.post('/', [
         'RETURN_HOME'
     ])
 ], (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(422).json({ errors: errors.array() });
+    if (!validationResult(req).isEmpty()) return res.status(422).json({ errors: validationResult(req).array() });
 
     database.forEach(boat => {
         if (boat.id === parseInt(req.body.id)) {
