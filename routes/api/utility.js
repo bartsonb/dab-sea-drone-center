@@ -1,15 +1,5 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
+const UtilityController = require('../../controller/UtilityController');
 
 // @route   GET api/utility/commands
-// @desc    Get all available commands
-// @access  Public
-module.exports = router.get('/commands', (req, res) => {
-    res.json([
-        'MOVE_STRAIGHT',
-        'MOVE_LEFT',
-        'MOVE_RIGHT',
-        'STOP',
-        'RETURN_HOME'
-    ]);
-});
+module.exports = router.get('/commands', UtilityController.commands);
