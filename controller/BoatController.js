@@ -1,5 +1,5 @@
-const { check, validationResult } = require('express-validator');
 const BoatModel = require('../models/BoatModel');
+const Joi = require('@hapi/joi');
 
 let database = [
     {
@@ -12,6 +12,16 @@ let database = [
     }
 ];
 
+const schema = {
+    show: Joi.object({
+        id: Joi.number().valid(...database.map(boat => boat.id)).required()
+    }),
+    store: Joi.object({
+        id: Joi.number().valid(...database.map(boat => boat.id)).required(),
+        command: Joi.string().valid(...[ 'STOP', 'RETURN_HOME' ]).required()
+    })
+};
+
 // @route   GET /api/boats
 exports.index = (req, res) => {
     res.json(database);
@@ -19,39 +29,31 @@ exports.index = (req, res) => {
 
 // @route   GET /api/boats/:id
 exports.show = (req, res) => {
-    if (!validationResult(req).isEmpty()) return res.status(422).json({ errors: validationResult(req).array() });
+    let { id } = req.body;
+
+    schema.show.validate({ id: id });
 
     // Respond with boat
-    let boat = database.find(boat => boat.id === req.params.id);
+    let boat = database.find(boat => boat.id === id);
+    
     res.json(boat);
 
     // Clear command array
     boat.commands = [];
 };
 
-exports.show.validate = [
-    check('id','Boat not found.').toInt().isIn(database.map(boat => boat.id))
-];
-
 // @route   POST /api/boats
 exports.store = (req, res) => {
-    if (!validationResult(req).isEmpty()) return res.status(422).json({ errors: validationResult(req).array() });
+    let { id, command } = req.body;
 
-    database.forEach(boat => {
-        if (boat.id === parseInt(req.body.id)) {
-            boat.commands.push(req.body.command);
-            res.json(boat);
-        }
-    });
+    schema.store.validate({ id: id, command: command });
+
+    let boat = database.find(boat => boat.id === id);
+
+    if (boat) {
+        boat.commands.push(command);
+        res.json(boat);
+    }
+
+    res.status(422).json({message: 'Unprocessable Entitiy.'});
 };
-
-exports.store.validate = [
-    check('id').isNumeric().isIn(database.map(boat => boat.id)),
-    check('command').isString().isIn([
-        'MOVE_STRAIGHT',
-        'MOVE_LEFT',
-        'MOVE_RIGHT',
-        'STOP',
-        'RETURN_HOME'
-    ])
-];
