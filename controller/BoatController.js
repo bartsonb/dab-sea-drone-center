@@ -41,15 +41,16 @@ exports.show = (req, res) => {
 // @route   POST /api/boats/:id
 exports.update = (req, res) => {
     let id = parseInt(req.params.id);
-    let { command, position } = req.body;
+    let { command, position, clearCommandList } = req.body;
 
     Joi.object({
         id: Joi.number().valid(...database.map(boat => boat.id)).required(),
         command: Joi.string().valid(...[ 'STOP', 'RETURN', 'SEARCH' ]),
-        clear: Joi.boolean()
+        clearCommandList: Joi.boolean()
     }).validate({
         id: id,
-        command: command
+        command: command,
+        clearCommandList: clearCommandList
     });
 
     let boat = database.find(boat => boat.id === id);
@@ -57,7 +58,10 @@ exports.update = (req, res) => {
     if (boat) {
         if (command) boat.commands.push(command);
         boat.position = position;
-        return res.json(boat);
+        res.json(boat);
+
+        if (clearCommandList) boat.commands = [];
+        return;
     }
 
     return res.status(404).json({"message": 'Boat not found.'});
