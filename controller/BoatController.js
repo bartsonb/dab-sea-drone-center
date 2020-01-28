@@ -4,23 +4,17 @@ const Joi = require('@hapi/joi');
 let database = [
     {
         id: 1,
-        commands: [ 'MOVE', 'LEFT' ]
+        fence: [[12.2010,51.2221], [12.20001,51.222267], [14.214501,52.912267]],
+        position: [12.2001,51.2220],
+        commands: [ 'SEARCH', 'RETURN' ]
     },
     {
         id: 2,
-        commands: [ 'MOVE' ]
+        fence: [[12.2010,51.2221], [12.20001,51.222267]],
+        position: [12.2001,51.2220],
+        commands: [ 'SEARCH' ]
     }
 ];
-
-const schema = {
-    show: Joi.object({
-        id: Joi.number().valid(...database.map(boat => boat.id)).required()
-    }),
-    store: Joi.object({
-        id: Joi.number().valid(...database.map(boat => boat.id)).required(),
-        command: Joi.string().valid(...[ 'STOP', 'RETURN_HOME' ]).required()
-    })
-};
 
 // @route   GET /api/boats
 exports.index = (req, res) => {
@@ -29,31 +23,42 @@ exports.index = (req, res) => {
 
 // @route   GET /api/boats/:id
 exports.show = (req, res) => {
-    let { id } = req.body;
+    let id = parseInt(req.params.id);
 
-    schema.show.validate({ id: id });
-
-    // Respond with boat
-    let boat = database.find(boat => boat.id === id);
-    
-    res.json(boat);
-
-    // Clear command array
-    boat.commands = [];
-};
-
-// @route   POST /api/boats
-exports.store = (req, res) => {
-    let { id, command } = req.body;
-
-    schema.store.validate({ id: id, command: command });
+    Joi.object({
+        id: Joi.number().valid(...database.map(boat => boat.id)).required(),
+    }).validate({ id: id });
 
     let boat = database.find(boat => boat.id === id);
 
     if (boat) {
-        boat.commands.push(command);
-        res.json(boat);
+        return res.json(boat);
     }
 
-    res.status(422).json({message: 'Unprocessable Entitiy.'});
+    return res.status(404).json({"message": "Boat not found."});
+};
+
+// @route   POST /api/boats/:id
+exports.update = (req, res) => {
+    let id = parseInt(req.params.id);
+    let { command, position } = req.body;
+
+    Joi.object({
+        id: Joi.number().valid(...database.map(boat => boat.id)).required(),
+        command: Joi.string().valid(...[ 'STOP', 'RETURN', 'SEARCH' ]),
+        clear: Joi.boolean()
+    }).validate({
+        id: id,
+        command: command
+    });
+
+    let boat = database.find(boat => boat.id === id);
+
+    if (boat) {
+        if (command) boat.commands.push(command);
+        boat.position = position;
+        return res.json(boat);
+    }
+
+    return res.status(404).json({"message": 'Boat not found.'});
 };
