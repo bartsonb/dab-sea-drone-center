@@ -24,7 +24,7 @@ export class Boats extends Component<BoatsProps, BoatsState> {
 
         this.state = {
             boats: [],
-            command: 'MOVE_STRAIGHT',
+            command: 'SEARCH',
             id: 1,
             availableCommands: [],
             loading: true,
@@ -61,7 +61,7 @@ export class Boats extends Component<BoatsProps, BoatsState> {
 
     sendCommand(event: any): void {
         event.preventDefault();
-        fetch('/api/boats', {
+        fetch('/api/boats/' + this.state.id, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
