@@ -17,7 +17,7 @@ import java.util.UUID
 
 case class Boat (
   id: Option[Long] = None,
-  fence: Option[Seq[ERRORUNKNOWN]] = None
+  fence: Option[Seq[Seq[Int]]] = None
 ) extends ApiModel
 
 
