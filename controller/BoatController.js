@@ -62,6 +62,7 @@ exports.update = (req, res) => {
         id: id,
         command: command,
         wayPoints: wayPoints,
+        position: position,
         fence: fence,
         speed: speed,
         heading: heading
