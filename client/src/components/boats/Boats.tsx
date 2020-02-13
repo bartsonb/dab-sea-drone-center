@@ -41,12 +41,21 @@ export class Boats extends Component<BoatsProps, BoatsState> {
             .then(response => this.setState({
                 loading: false,
                 boats: response
+            }))
+            .catch(err => this.setState({
+                loading: false,
+                error: true
             }));
 
         this.api('api/utility/commands')
             .then(response => this.setState({
                 loading: false,
-                availableCommands: response
+                availableCommands: response,
+                command: response[0]
+            }))
+            .catch(err => this.setState({
+                loading: false,
+                error: true
             }))
     }
 
@@ -91,15 +100,23 @@ export class Boats extends Component<BoatsProps, BoatsState> {
     }
 
     render() {
-        let content = !this.state.loading
-            ? this.state.boats.map(boat => <Boat id={boat.id} commands={boat.commands} key={boat.id}/>)
+        let content = (!this.state.loading && this.state.boats.length > 0)
+            ? this.state.boats.map(boat => <Boat
+                id={boat.id}
+                command={boat.command}
+                fence={boat.fence}
+                speed={boat.speed}
+                heading={boat.heading}
+                wayPoints={boat.wayPoints}
+                position={boat.position}
+                key={boat.id}/>)
             : 'Loading ..';
 
-        let optionsForIds = !this.state.loading
+        let optionsForIds = (!this.state.loading && this.state.boats.length > 0)
             ? this.state.boats.map((boat, index) => <option key={index}>{boat.id}</option>)
             : <option>Loading ..</option>;
 
-        let optionsForCommands = !this.state.loading
+        let optionsForCommands = (!this.state.loading && this.state.availableCommands.length > 0)
             ? this.state.availableCommands.map((command, index) => <option key={index}>{command}</option>)
             : <option>Loading ..</option>;
 
