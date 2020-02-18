@@ -51,7 +51,7 @@ exports.update = (req, res) => {
 
     Joi.object({
         id: Joi.number().valid(...database.map(boat => boat.id)).required(),
-        command: Joi.string().valid('STOP', 'RETURN', 'SEARCH'),
+        command: Joi.string().valid('STOP', 'RETURN', 'SEARCH', 'TEST'),
         wayPoints: Joi.array().items(Joi.array().items(Joi.number())),
         fence: Joi.array().items(Joi.array().items(Joi.number())),
         position: Joi.array().items(Joi.number()),

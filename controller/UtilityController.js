@@ -4,6 +4,7 @@ exports.commands = (req, res) => {
     res.json([
         'STOP',
         'RETURN',
-        'SEARCH'
+        'SEARCH',
+        'TEST'
     ]);
 };
