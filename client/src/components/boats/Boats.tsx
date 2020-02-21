@@ -104,7 +104,8 @@ export class Boats extends Component<BoatsProps, BoatsState> {
             ? this.state.boats.map(boat => <Boat
                 id={boat.id}
                 command={boat.command}
-                fence={boat.fence}
+                coordinates={boat.coordinates}
+                startPoint={boat.startPoint}
                 speed={boat.speed}
                 heading={boat.heading}
                 wayPoints={boat.wayPoints}

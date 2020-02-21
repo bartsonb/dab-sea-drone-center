@@ -5,7 +5,8 @@ export interface BoatProps {
     id: number,
     command: string,
     wayPoints: number[][],
-    fence: number[][],
+    startPoint: number[],
+    coordinates: number[][],
     position: number[],
     speed: number,
     heading: number
@@ -37,8 +38,8 @@ export const Boat = (props: BoatProps) => {
                     <ul>{ props.wayPoints.map((points, index) => <li key={index}>{points[0] + ", " + points[1]}</li>) }</ul>
                 </li>
                 <li>
-                    <b>Fence:</b><br/>
-                    <ul>{ props.fence.map((points, index) => <li key={index}>{points[0] + ", " + points[1]}</li>) }</ul>
+                    <b>coordinates:</b><br/>
+                    <ul>{ props.coordinates.map((points, index) => <li key={index}>{points[0] + ", " + points[1]}</li>) }</ul>
                 </li>
             </ul>
         </div>

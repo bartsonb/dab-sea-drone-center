@@ -4,7 +4,7 @@ const Joi = require('@hapi/joi');
 let database = [
     {
         id: 1,
-        fence: [[12.2010,51.2221], [12.20001,51.222267], [14.214501,52.912267]],
+        coordinates: [[12.2010,51.2221], [12.20001,51.222267], [14.214501,52.912267]],
         position: [12.2001,51.2220],
         heading: 0,
         speed: 5,
@@ -13,7 +13,7 @@ let database = [
     },
     {
         id: 2,
-        fence: [[12.2010,51.2221], [12.20001,51.222267]],
+        coordinates: [[12.2010,51.2221], [12.20001,51.222267]],
         position: [12.2001,51.2220],
         heading: 0,
         speed: 5,
@@ -47,13 +47,14 @@ exports.show = (req, res) => {
 // @returns Specific boat, selected by id, after update
 exports.update = (req, res) => {
     let id = parseInt(req.params.id);
-    let { command, position, wayPoints, fence, heading, clear, speed } = req.body;
+    let { command, position, wayPoints, startPoint, coordinates, heading, clear, speed } = req.body;
 
     Joi.object({
         id: Joi.number().valid(...database.map(boat => boat.id)).required(),
         command: Joi.string().valid('STOP', 'RETURN', 'SEARCH', 'TEST'),
         wayPoints: Joi.array().items(Joi.array().items(Joi.number())),
-        fence: Joi.array().items(Joi.array().items(Joi.number())),
+        coordinates: Joi.array().items(Joi.array().items(Joi.number())),
+        startPoint: Joi.number(),
         position: Joi.array().items(Joi.number()),
         heading: Joi.number(),
         speed: Joi.number(),
@@ -63,7 +64,8 @@ exports.update = (req, res) => {
         command: command,
         wayPoints: wayPoints,
         position: position,
-        fence: fence,
+        startPoint: startPoint,
+        coordinates: coordinates,
         speed: speed,
         heading: heading
     });
@@ -74,12 +76,13 @@ exports.update = (req, res) => {
         if (command) boat.command = command;
         if (position) boat.position = position;
         if (wayPoints) boat.wayPoints = wayPoints;
-        if (fence) boat.fence = fence;
+        if (coordinates) boat.coordinates = coordinates;
         if (heading) boat.heading = heading;
         if (speed) boat.speed = speed;
+        if (startPoint) boat.startPoint = startPoint;
 
         if (clear) {
-            res.json({ fence: boat.fence, wayPoints: boat.wayPoints, command: boat.command});
+            res.json({ coordinates: boat.coordinates, wayPoints: boat.wayPoints, command: boat.command});
             boat.command = null;
         }
 
