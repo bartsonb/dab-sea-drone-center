@@ -38,7 +38,7 @@ export const Boat = (props: BoatProps) => {
                     <ul>{ props.wayPoints.map((points, index) => <li key={index}>{points[0] + ", " + points[1]}</li>) }</ul>
                 </li>
                 <li>
-                    <b>coordinates:</b><br/>
+                    <b>Coordinates:</b><br/>
                     <ul>{ props.coordinates.map((points, index) => <li key={index}>{points[0] + ", " + points[1]}</li>) }</ul>
                 </li>
             </ul>
