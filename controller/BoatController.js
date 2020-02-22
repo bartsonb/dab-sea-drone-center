@@ -1,19 +1,26 @@
 const BoatModel = require('../models/BoatModel');
 const Joi = require('@hapi/joi');
+const { only, except } = require('../lib/objectHelpers');
 
 // @route   GET /api/boats
 // @returns Array of all boats
 exports.index = (req, res) => {
-    BoatModel.find({}, (err, boats) => {
-        return res.send(boats.map(boat => boat));
+    BoatModel.find(
+        {},
+        '-_id -__v',
+        (err, boats) => {
+            return res.send(boats.map(boat => boat));
     });
 };
 
 // @route   GET /api/boats/:id
 // @returns Specific boat, selected by id
 exports.show = (req, res) => {
-    BoatModel.findOne({ id: parseInt(req.params.id) }, (err, boat) => {
-        return (boat) ? res.json(boat) : res.status(404).json({"message": "Boat not found."});
+    BoatModel.findOne(
+        { id: parseInt(req.params.id) },
+        '-_id -__v',
+        (err, boat) => {
+            return (boat) ? res.json(boat) : res.status(404).json({'message': 'Boat not found.'});
     });
 };
 
@@ -36,12 +43,18 @@ exports.update = (req, res) => {
 
     BoatModel.findOneAndUpdate(
         { id: parseInt(req.params.id) },
-        value,
-        { useFindAndModify: false, new: true },
+        { ...value },
+        { 
+            useFindAndModify: false, 
+            new: true,
+            fields: '-_id -__v'
+        },
         (err, boat) => {
-            if (!boat) return res.status(404).json({"message": "Boat not found."});
+            if (!boat) return res.status(404).json({'message': 'Boat not found.'});
 
-            return res.send(boat);
+            return (value.clear)
+                ? res.send(only(['coordinates', 'command', 'wayPoints'], boat))
+                : res.send(boat);
         }
     );
 };
