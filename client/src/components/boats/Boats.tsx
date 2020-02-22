@@ -100,7 +100,7 @@ export class Boats extends Component<BoatsProps, BoatsState> {
     }
 
     render() {
-        let content = (!this.state.loading && this.state.boats.length > 0)
+        let content = (!this.state.loading && Array.isArray(this.state.boats) && this.state.boats.length > 0)
             ? this.state.boats.map(boat => <Boat
                 id={boat.id}
                 command={boat.command}
@@ -113,11 +113,11 @@ export class Boats extends Component<BoatsProps, BoatsState> {
                 key={boat.id}/>)
             : 'Loading ..';
 
-        let optionsForIds = (!this.state.loading && this.state.boats.length > 0)
+        let optionsForIds = (!this.state.loading && Array.isArray(this.state.boats) && this.state.boats.length > 0)
             ? this.state.boats.map((boat, index) => <option key={index}>{boat.id}</option>)
             : <option>Loading ..</option>;
 
-        let optionsForCommands = (!this.state.loading && this.state.availableCommands.length > 0)
+        let optionsForCommands = (!this.state.loading && Array.isArray(this.state.availableCommands) && this.state.availableCommands.length > 0)
             ? this.state.availableCommands.map((command, index) => <option key={index}>{command}</option>)
             : <option>Loading ..</option>;
 

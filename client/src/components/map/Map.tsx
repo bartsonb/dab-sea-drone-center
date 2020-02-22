@@ -42,7 +42,7 @@ export class Map extends Component<MapProps, MapState> {
     }
 
     render() {
-        let { accessToken, initialViewState } = this.state;
+        // let { accessToken, initialViewState } = this.state;
 
         {/*
         const editableLayer = new EditableGeoJsonLayer({

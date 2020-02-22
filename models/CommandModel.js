@@ -11,4 +11,4 @@ const CommandSchema = new mongoose.Schema({
     }
 });
 
-module.exports = CommandModel = mongoose.model('boats', CommandSchema);
+module.exports = CommandModel = mongoose.model('command', CommandSchema);
