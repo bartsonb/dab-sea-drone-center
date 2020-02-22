@@ -30,10 +30,10 @@ exports.show = (req, res) => {
 exports.update = (req, res) => {
     let { value, error } = Joi.object({
         command: Joi.string(),
-        wayPoints: Joi.array().items(Joi.array().items(Joi.number())),
-        coordinates: Joi.array().items(Joi.array().items(Joi.number())),
+        wayPoints: Joi.array().items(Joi.array().min(2).max(2).required().items(Joi.number().required())),
+        coordinates: Joi.array().items(Joi.array().min(2).max(2).required().items(Joi.number().required())),
         startPoint: Joi.number(),
-        position: Joi.array().items(Joi.number()),
+        position: Joi.array().min(2).max(2).items(Joi.number()),
         heading: Joi.number(),
         speed: Joi.number(),
         clear: Joi.boolean()
