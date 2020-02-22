@@ -21,7 +21,6 @@ exports.show = (req, res) => {
 // @desc
 // @returns Specific boat, selected by id, after update
 exports.update = (req, res) => {
-
     let { value, error } = Joi.object({
         command: Joi.string(),
         wayPoints: Joi.array().items(Joi.array().items(Joi.number())),
@@ -31,9 +30,9 @@ exports.update = (req, res) => {
         heading: Joi.number(),
         speed: Joi.number(),
         clear: Joi.boolean()
-    }).validate(req.body, { abortEarly: false });
+    }).validate(req.body, { abortEarly: false, allowUnknown: true });
 
-    if (error) res.send(error);
+    if (error) return res.send(error);
 
     BoatModel.findOneAndUpdate(
         { id: parseInt(req.params.id) },
