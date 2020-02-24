@@ -1,35 +1,50 @@
 import React from 'react';
 import './Navbar.css';
-import '../bulma/bulmaEvents';
 import { Link } from "react-router-dom";
 
-export interface NavbarProps {
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
+export interface NavbarProps {
+    title?: string
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            flexGrow: 1,
+        },
+        menuButton: {
+            marginRight: theme.spacing(2),
+        },
+        title: {
+            flexGrow: 1,
+        },
+    }),
+);
+
 export const Navbar = (props: NavbarProps) => {
+    const classes = useStyles();
+
     return (
-        <nav className="navbar" role="navigation" aria-label="main navigation">
-            <div className="navbar-brand">
-                <a className="navbar-item" href="/">
-                    <h1>Sea Drone Center</h1>
-                </a>
+        <div className={classes.root}>
 
-                <a role="button" className="navbar-burger burger" aria-label="menu" aria-expanded="false"
-                   data-target="navbarBasicExample" href="#">
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                </a>
-            </div>
-
-            <div id="navbarBasicExample" className="navbar-menu">
-                <div className="navbar-start">
-                    <Link className='navbar-item' to={'/'}>Home</Link>
-                    <Link className='navbar-item' to={'/boats'}>Boats</Link>
-                    <Link className='navbar-item' to={'/map'}>Map</Link>
-                </div>
-            </div>
-        </nav>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" className={classes.title}>
+                        { props.title ?? 'Home' }
+                    </Typography>
+                    <Button color="inherit">Login</Button>
+                </Toolbar>
+            </AppBar>
+        </div>
     )
 };

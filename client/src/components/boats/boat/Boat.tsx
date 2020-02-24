@@ -13,6 +13,21 @@ export interface BoatProps {
 }
 
 export const Boat = (props: BoatProps) => {
+    const sendCommand = (event: any): void  => {
+        event.preventDefault();
+
+        fetch('/api/boats/' + props.id, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: props.id,
+                command: props.command
+            })
+        })
+    };
+
     return (
         <div className='boat'>
             <h2>Boat ({ props.id })</h2>

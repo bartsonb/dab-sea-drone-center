@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // CSS
 import './App.css';
-import 'react-bulma-components/dist/react-bulma-components.min.css';
+import Container from '@material-ui/core/Container';
 
 // Components
 import { Navbar } from "./components/layout/Navbar";
@@ -17,13 +17,13 @@ const App: React.FC = () => {
     <Router>
         <Navbar />
 
-        <section className="container">
+        <Container maxWidth={"lg"}>
             <Switch>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/boats" component={Boats} />
                 <Route exact path="/map" component={Map} />
             </Switch>
-        </section>
+        </Container>
 
         <Footer />
     </Router>

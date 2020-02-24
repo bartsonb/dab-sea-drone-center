@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import './Map.css';
-import { Box } from 'react-bulma-components';
 
 // @ts-ignore
 // import DeckGL from '@deck.gl/react';
@@ -57,9 +56,7 @@ export class Map extends Component<MapProps, MapState> {
 
         return (
             <div className="map">
-                <Box>
-                    <button className="button btn">Add Fence</button>
-                </Box>
+                <button className="button btn">Add Fence</button>
                 {/*
                 <DeckGL
                     initialViewState={initialViewState}
