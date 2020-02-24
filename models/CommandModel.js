@@ -8,6 +8,10 @@ const CommandSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
+    },
+    uuid: {
+        type: String,
+        required: false
     }
 });
 

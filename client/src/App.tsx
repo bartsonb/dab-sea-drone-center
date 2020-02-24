@@ -17,7 +17,7 @@ const App: React.FC = () => {
     <Router>
         <Navbar />
 
-        <section className="container">
+        <section className={'container'}>
             <Switch>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/boats" component={Boats} />

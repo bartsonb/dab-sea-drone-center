@@ -22,7 +22,6 @@ mongoose
 // API Routes
 app.use('/api/boats', require('./routes/api/boats'));
 app.use('/api/utility', require('./routes/api/utility'));
-app.use('/api/online', require('./routes/api/online'));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

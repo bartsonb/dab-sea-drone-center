@@ -2,8 +2,11 @@ const BoatModel = require('../models/BoatModel');
 const Joi = require('@hapi/joi');
 const { only, except } = require('../lib/objectHelpers');
 
-// @route   GET /api/boats
-// @returns Array of all boats
+/**
+ * @name    Index
+ * @route   GET /api/boats
+ * @returns Array of all boats
+ */
 exports.index = (req, res) => {
     BoatModel.find(
         {},
@@ -13,8 +16,11 @@ exports.index = (req, res) => {
     });
 };
 
-// @route   GET /api/boats/:id
-// @returns Specific boat, selected by id
+/**
+ * @name    Show
+ * @route   GET /api/boats/:id
+ * @returns Specific boat, selected by id
+ */
 exports.show = (req, res) => {
     BoatModel.findOne(
         { id: parseInt(req.params.id) },
@@ -24,11 +30,14 @@ exports.show = (req, res) => {
     });
 };
 
-// @route   POST /api/boats/:id
-// @desc
-// @returns Specific boat, selected by id, after update
+/**
+ * @name    Update
+ * @route   POST /api/boats/:id
+ * @returns Specific boat, selected by id, after update
+ */
 exports.update = (req, res) => {
     let { value, error } = Joi.object({
+        name: Joi.string(),
         command: Joi.string(),
         wayPoints: Joi.array().items(Joi.array().min(2).max(2).required().items(Joi.number().required())),
         coordinates: Joi.array().items(Joi.array().min(2).max(2).required().items(Joi.number().required())),
