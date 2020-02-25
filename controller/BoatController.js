@@ -1,6 +1,6 @@
 const BoatModel = require('../models/BoatModel');
 const Joi = require('@hapi/joi');
-const { only, except } = require('../lib/objectHelpers');
+const { only, except, convertQuery, isEmpty } = require('../lib/helpers');
 
 /**
  * @name    Index
@@ -36,9 +36,10 @@ exports.show = (req, res) => {
  * @returns Specific boat, selected by id, after update
  */
 exports.update = (req, res) => {
-    console.log('POST-REQUEST');
-    console.log(req.headers);
-    console.log(req.body);
+    console.log('HEADERS: ', req.headers);
+    console.log('BODY: ', req.body);
+
+    let requestData = !isEmpty(req.body) ? req.body : convertQuery(req.query);
 
     let { value, error } = Joi.object({
         name: Joi.string(),
@@ -50,7 +51,7 @@ exports.update = (req, res) => {
         heading: Joi.number(),
         speed: Joi.number(),
         clear: Joi.boolean()
-    }).validate(req.body, { abortEarly: false, allowUnknown: true });
+    }).validate(requestData, { abortEarly: false, allowUnknown: true });
 
     if (error) return res.send(error);
 
