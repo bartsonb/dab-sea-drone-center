@@ -13,7 +13,7 @@ exports.index = (req, res) => {
         '-_id -__v',
         (err, boats) => {
             return res.send(boats.map(boat => boat));
-    });
+    }).sort({ id: 'asc' });
 };
 
 /**
