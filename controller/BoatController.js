@@ -36,6 +36,10 @@ exports.show = (req, res) => {
  * @returns Specific boat, selected by id, after update
  */
 exports.update = (req, res) => {
+    console.log('POST-REQUEST');
+    console.log(req.headers);
+    console.log(req.body);
+
     let { value, error } = Joi.object({
         name: Joi.string(),
         command: Joi.string(),

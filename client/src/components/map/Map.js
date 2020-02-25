@@ -16,38 +16,43 @@ export default class Map extends Component {
                 latitude: this.props.latitude,
                 zoom: 15,
             },
-            features: [
-                {
-                    name: 'drone',
-                    type: "Feature",
-                    properties: {
-                        renderType: "Point"
-                    },
-                    geometry: {
-                        type:"Point",
-                        coordinates: [[ this.props.latitude, this.props.longitude ]]
-                    }
-                },
-                {
-                    name: "drone-fence",
-                    type: "Feature",
-                    properties: {
-                        renderType: "Polygon"
-                    },
-                    geometry: {
-                        type:"Polygon",
-                        coordinates: [ this.props.coordinates ]
-                    }
-                }
-            ],
+            features: [],
             coordinatesExist: false,
             mode: EditorModes.EDITING
         };
     }
 
     componentDidMount() {
+        let initialFeatures = [];
+
+        if (this.props.longitude !== 'undefined' && this.props.latitude !== 'undefined') {
+            console.log('Loading initial drone position.');
+            initialFeatures.push(
+                {
+                    name: 'drone',
+                    type: "Feature",
+                    properties: { renderType: "Point" },
+                    geometry: { type:"Point", coordinates: [[ this.props.latitude, this.props.longitude ]] }
+                }
+            )
+        }
+
+        if (this.props.coordinates !== 'undefined') {
+            console.log('Loading initial drone fence.');
+            initialFeatures.push(
+                {
+                    name: "drone-fence",
+                    type: "Feature",
+                    properties: { renderType: "Polygon" },
+                    geometry: { type:"Polygon", coordinates: [ this.props.coordinates ] }
+                }
+            )
+        }
+
         this.setState({
-            coordinatesExist: (this.props.coordinates !== null)
+            // Used for displaying the save button
+            coordinatesExist: (this.props.coordinates !== 'undefined'),
+            features: initialFeatures
         });
     }
 
