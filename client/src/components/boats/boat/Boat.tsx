@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import './Boat.css';
 
 import {
-    MdAndroid,
+    MdKeyboardArrowDown,
     MdKeyboardReturn,
-    MdLocationSearching,
-    MdRemoveCircle,
-    MdRemoveCircleOutline,
-    MdRssFeed
+    MdLocationSearching, MdMenu, MdRefresh,
+    MdRemoveCircleOutline, MdRoundedCorner,
+    MdUpdate
 } from "react-icons/md"
+import Map from "../../map/Map";
 
 interface BoatProps {
     id: number,
@@ -27,6 +27,8 @@ interface BoatState {
     loading: boolean,
     liveUpdates: boolean,
     error: boolean,
+    showDropdown: boolean,
+    showMap: boolean,
     name: string,
     command: string,
     wayPoints: number[][],
@@ -45,6 +47,8 @@ export class Boat extends Component<BoatProps, BoatState> {
             loading: false,
             liveUpdates: false,
             error: false,
+            showDropdown: false,
+            showMap: false,
             command: props.command,
             coordinates: props.coordinates,
             heading: props.heading,
@@ -57,8 +61,17 @@ export class Boat extends Component<BoatProps, BoatState> {
 
         this.liveUpdate = this.liveUpdate.bind(this);
         this.toggleLiveUpdates = this.toggleLiveUpdates.bind(this);
+        this.toggleDropdown = this.toggleDropdown.bind(this);
+        this.toggleMap = this.toggleMap.bind(this);
 
         setInterval(this.liveUpdate, 5000);
+    }
+
+    componentDidMount() {
+        this.setState({
+            liveUpdates: (localStorage.getItem('liveUpdates-id-' + this.props.id) === 'true'),
+            showMap: (localStorage.getItem('showMap-id-' + this.props.id) === 'true')
+        })
     }
 
     sendCommand(command: string) {
@@ -79,15 +92,13 @@ export class Boat extends Component<BoatProps, BoatState> {
             case 'STOP':
                 return <MdRemoveCircleOutline className={'commandButton__icon'} />;
             case 'SEARCH':
-                return <MdLocationSearching size={'1em'} className={'commandButton__icon'} />;
+                return <MdLocationSearching className={'commandButton__icon'} />;
             case 'RETURN':
-                return <MdKeyboardReturn size={'1em'} className={'commandButton__icon'} />;
+                return <MdKeyboardReturn className={'commandButton__icon'} />;
         }
     }
 
     getCommandButtons() {
-
-
         return (this.props.availableCommands.length > 0)
             ? this.props.availableCommands.map((command: string, index: number) =>
                 <button className={'button commandButton commandButton__' + command + ((this.state.command === command) ? ' is-link' : '')}
@@ -101,12 +112,10 @@ export class Boat extends Component<BoatProps, BoatState> {
 
     liveUpdate() {
         if (this.state.liveUpdates) {
-            console.log('Boat with id: ' + this.props.id + ' updated.');
-
+            console.log( this.props.id + ' updated.');
             fetch('/api/boats/' + this.props.id)
                 .then((response:any) => response.json())
                 .then((response: any) => {
-                    console.log(response);
                     this.setState( {
                         ...response
                     });
@@ -114,52 +123,92 @@ export class Boat extends Component<BoatProps, BoatState> {
         }
     }
 
-    toggleLiveUpdates(event: React.MouseEvent) {
+    toggleLiveUpdates() {
+        localStorage.setItem('liveUpdates-id-' + this.props.id, '' + !this.state.liveUpdates);
         this.setState({ liveUpdates: !this.state.liveUpdates });
+    }
+
+    toggleDropdown() {
+        this.setState({ showDropdown: !this.state.showDropdown });
+    }
+
+    toggleMap() {
+        localStorage.setItem('showMap-id-' + this.props.id, '' + !this.state.showMap);
+        this.setState({ showMap: !this.state.showMap });
     }
 
     render() {
         return (
             <div className='boat'>
-                <div className="level">
-                    <h2 className={'level-left'}>{this.state.name}</h2>
-                    <div className="commandButtons level-right">
-                        <div className={'button commandButton__LIVEUPDATES commandButton__LIVEUPDATES' + (this.state.liveUpdates ? '--active' : '--inactive')}
-                             onClick={this.toggleLiveUpdates}>
-                            <label htmlFor="checkbox">
-                                <input type="checkbox" />
-                                Live Updates
-                            </label>
-                        </div>
 
+                <div className="level">
+                    <h2 className={'level-left'}>
+                        {this.state.name}
+                        <span title='Live Update active' className={'live-update-spinner ' + (this.state.liveUpdates ? 'is-active' : '')}><MdRefresh /></span>
+                    </h2>
+                    <div className="commandButtons level-right">
                         { this.getCommandButtons() }
+
+                        <div className={'dropdown ' + (this.state.showDropdown ? 'is-active' : '')}>
+                            <div className="dropdown-trigger">
+                                <button onClick={this.toggleDropdown} className="button" aria-haspopup="true" aria-controls="dropdown-menu2">
+                                    <span className="icon is-small"><MdMenu /></span>
+                                </button>
+                            </div>
+                            <div className="dropdown-menu" id="dropdown-menu2" role="menu">
+                                <div className="dropdown-content">
+                                    <div className="my-dropdown-item">
+                                        <MdRoundedCorner size={'1.2em'} className={'dropdown__icons'} />
+                                        <p>Add or edit fence.</p>
+                                    </div>
+                                    <hr className="dropdown-divider" />
+                                    <div className={'my-dropdown-item ' + (this.state.liveUpdates ? 'is-active' : '')} onClick={this.toggleLiveUpdates}>
+                                        <MdUpdate size={'1.2em'} className={'dropdown__icons ' + (this.state.liveUpdates ? 'is-active' : '')} />
+                                        <p>Live Updates</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div className="level">
-                    <div className="level-right">
-                        <div className="level-item has-text-centered">
+                    <div className="stat level-right">
+                        <div className="stat__card level-item has-text-centered">
                             <div>
                                 <p className="heading">Speed</p>
                                 <p className="title">{this.state.speed}</p>
                             </div>
                         </div>
-                        <div className="level-item has-text-centered">
+                        <div className="stat__card level-item has-text-centered">
                             <div>
                                 <p className="heading">Heading</p>
                                 <p className="title">{this.state.heading}</p>
                             </div>
                         </div>
+                        <div className="stat__card level-item has-text-centered">
+                            <div>
+                                <p className="heading">Position</p>
+                                <p className="title">{this.state.position[0] + ' / ' + this.state.position[1]}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/*
-                        <ul>{this.state.coordinates.map(([lat, lng], index) => <li key={index}>{lat + ", " + lng}</li>)}</ul>
-                */}
-
-                <div className="map level">
-
+                <div className={'map-trigger ' + (this.state.showMap ? 'is-open' : '')} onClick={this.toggleMap}>
+                    <p>{this.state.showMap ? 'Hide' : 'Show'} Map</p>
+                    <MdKeyboardArrowDown style={{transform: 'rotate(' + (this.state.showMap ? 0 : 180) + 'deg)'}}/>
                 </div>
+
+                {
+                    this.state.showMap
+                        ? <Map
+                            latitude={this.state.position[0]}
+                            longitude={this.state.position[1]}
+                            coordinates={this.state.coordinates}
+                            id={this.props.id} />
+                        : ''
+                }
             </div>
         )
     }

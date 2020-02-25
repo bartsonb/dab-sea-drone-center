@@ -14,9 +14,10 @@
     list-style-type: none;
 }
 
+.stat__card > div > .title { font-size: 1em; }
+
 .commandButtons {}
-.commandButton { font-weight: bold; color: #555; }
-.commandButton:not(last-child) { margin-right: 7px }
+.commandButton { margin-right: 7px; font-weight: bold; color: #555; font-size: 1em; transition: all 0.2s ease-in-out; }
 
 .commandButton.is-link > .commandButton__icon { color: #fff; }
 
@@ -31,8 +32,42 @@
 
 .commandButton__icon { margin-right: 4px; color: #3373dc; }
 
+.dropdown { transition: all 0.2s ease-in-out !important; }
+.dropdown-menu { right: 0 !important; left: unset; }
 
-.map {
-    min-height: 300px;
-    background: #ccc;
+.my-dropdown-item { color: #333; font-size: 0.9em; padding: 3px 10px; display: flex; align-items: center; transition: all 0.1s ease-in-out; }
+.my-dropdown-item:hover { cursor: pointer; background-color: #efefef; }
+.my-dropdown-item.is-active { background-color: #3373dc; color: #fff; }
+
+.dropdown__icons { margin-right: 5px; line-height: 20px; }
+.dropdown__icons.is-active { }
+
+.live-update-spinner { transition: all 0.3s ease; opacity: 0; color: #3373dc; }
+.live-update-spinner > svg { animation: spinning 2s linear infinite; }
+.live-update-spinner.is-active { opacity: 1; color: #3373dc; }
+
+.map-trigger { display: flex; justify-content: center; border-radius: 3px; padding: 2px 0; }
+.map-trigger.is-open { background: #efefef; border-radius: 3px 3px 0 0; }
+.map-trigger:hover { cursor: pointer; color: #3373dc; background: rgba(0, 0, 0, 0.05); }
+.map-trigger > p { text-transform: uppercase; font-size: 0.7em; font-weight: bold; }
+.map-trigger > span {  }
+
+@keyframes spinning {
+    0% { transform: rotate(0deg) }
+    100% { transform: rotate(360deg) }
+}
+
+.map { min-height: 300px; background: #ccc; }
+
+@media screen and (max-width: 768px) {
+    .commandButtons { margin-top: 0.7rem !important; display: flex; flex-direction: column; align-items: stretch; }
+    .commandButton {  display: flex; justify-content: flex-start; margin: 7px 0 0 0; }
+
+    .dropdown { width: 100%; margin-top: 7px; }
+    .dropdown-trigger, .dropdown-trigger > button { width: 100%; }
+    .dropdown-menu { width: 100%; }
+
+    .stat { display: flex; flex-direction: row; justify-content: space-evenly; }
+    .stats > .stat__card { margin-bottom: .75rem; }
+    .level-item:not(:last-child) { margin-bottom: 0 !important; }
 }

@@ -16,12 +16,12 @@ export const Navbar = (props: NavbarProps) => {
                     <h1>Sea Drone Center</h1>
                 </a>
 
-                <a role="button" className="navbar-burger burger" aria-label="menu" aria-expanded="false"
-                   data-target="navbarBasicExample" href="#">
+                <div role="button" className="navbar-burger burger" aria-label="menu" aria-expanded="false"
+                   data-target="navbarBasicExample">
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
-                </a>
+                </div>
             </div>
 
                 <div id="navbarBasicExample" className="navbar-menu">
