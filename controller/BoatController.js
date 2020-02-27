@@ -36,9 +36,6 @@ exports.show = (req, res) => {
  * @returns Specific boat, selected by id, after update
  */
 exports.update = (req, res) => {
-    console.log('HEADERS: ', req.headers);
-    console.log('BODY: ', req.body);
-
     let requestData = !isEmpty(req.body) ? req.body : convertQuery(req.query);
 
     let { value, error } = Joi.object({
@@ -46,7 +43,7 @@ exports.update = (req, res) => {
         command: Joi.string(),
         wayPoints: Joi.array().items(Joi.array().min(2).max(2).required().items(Joi.number().required())),
         coordinates: Joi.array().items(Joi.array().min(2).max(2).required().items(Joi.number().required())),
-        startPoint: Joi.number(),
+        startPoint: Joi.array().min(2).max(2).items(Joi.number()),
         position: Joi.array().min(2).max(2).items(Joi.number()),
         heading: Joi.number(),
         speed: Joi.number(),

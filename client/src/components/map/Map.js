@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import MapGL from 'react-map-gl';
+import React, { Component } from 'react';
+import MapGL, { Source, Layer } from 'react-map-gl';
 import { Editor, EditorModes } from 'react-map-gl-draw';
 import { getFeatureStyle, getEditHandleStyle } from './style';
 
@@ -26,27 +26,19 @@ export default class Map extends Component {
         let initialFeatures = [];
 
         if (this.props.longitude !== 'undefined' && this.props.latitude !== 'undefined') {
-            console.log('Loading initial drone position.');
-            initialFeatures.push(
-                {
-                    name: 'drone',
-                    type: "Feature",
-                    properties: { renderType: "Point" },
-                    geometry: { type:"Point", coordinates: [[ this.props.latitude, this.props.longitude ]] }
-                }
-            )
+            initialFeatures.push({
+                type: 'Feature',
+                properties: { renderType: 'Point', title: 'drone' },
+                geometry: { type:'Point', coordinates: [[ this.props.latitude, this.props.longitude ]] }
+            })
         }
 
         if (this.props.coordinates !== 'undefined') {
-            console.log('Loading initial drone fence.');
-            initialFeatures.push(
-                {
-                    name: "drone-fence",
-                    type: "Feature",
-                    properties: { renderType: "Polygon" },
-                    geometry: { type:"Polygon", coordinates: [ this.props.coordinates ] }
-                }
-            )
+            initialFeatures.push({
+                type: 'Feature',
+                properties: { renderType: 'Polygon', title: 'fence' },
+                geometry: { type:'Polygon', coordinates: [ this.props.coordinates ] }
+            })
         }
 
         this.setState({
@@ -81,7 +73,11 @@ export default class Map extends Component {
 
         this.setState({
             features: features
-        })
+        });
+    };
+
+    _updateFeatures = (features) => {
+        console.log('features: ', features);
     };
 
     _renderDrawTools = () => {
@@ -114,8 +110,25 @@ export default class Map extends Component {
 
     _getFeatures = () => this._editorRef && this._editorRef.getFeatures();
 
+    _getDroneFeatureAsGeoJson = () => {
+        let features = this._getFeatures();
+
+        if (features && Array.isArray(features)) {
+            let droneFeature = features.find(feature => feature.hasOwnProperty('properties') && feature.properties.hasOwnProperty('title') && feature.properties.title === 'drone');
+
+            if (droneFeature) {
+                let feature = JSON.parse(JSON.stringify(droneFeature));
+                let [ lat, lng ] = feature.geometry.coordinates[0];
+                feature.geometry.coordinates = [ this.props.longitude ?? lng, this.props.latitude ?? lat ];
+                return feature;
+            }
+
+            return null;
+        }
+    };
+
     _saveFence = () => {
-        let polygon = this._getFeatures().find(feature => feature.hasOwnProperty('name') && feature.name === 'drone-fence');
+        let polygon = this._getFeatures().find(feature => feature.hasOwnProperty('properties') && feature.properties.hasOwnProperty('title') && feature.properties.title === 'fence');
 
         if (
             Array.isArray(polygon?.geometry?.coordinates) &&
@@ -136,7 +149,27 @@ export default class Map extends Component {
     };
 
     render() {
-        const {viewport, mode} = this.state;
+        const { viewport, mode } = this.state;
+
+        let droneFeature = this._getDroneFeatureAsGeoJson();
+        let DroneLayer = (droneFeature)
+            ? <React.Fragment>
+                <Source id="points" type="geojson" data={{ type: 'FeatureCollection', features: [droneFeature] }} />
+                <Layer
+                    id="points"
+                    type="circle"
+                    source="points"
+                    paint={{
+                        "circle-stroke-width": 2,
+                        "circle-stroke-color": '#3cb2d0',
+                        "circle-opacity": 0.1,
+                        'circle-radius': 4,
+                        'circle-color': '#fff'
+                    }}
+                />
+            </React.Fragment>
+            : '';
+
         return (
             <MapGL
                 {...viewport}
@@ -160,7 +193,8 @@ export default class Map extends Component {
                     editHandleStyle={getEditHandleStyle}
                 />
 
-                {this._renderDrawTools()}
+                { DroneLayer }
+                { this._renderDrawTools() }
             </MapGL>
         );
     }

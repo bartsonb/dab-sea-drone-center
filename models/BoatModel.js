@@ -17,6 +17,10 @@ const BoatSchema = new mongoose.Schema({
         type: [Number],
         required: false
     },
+    startPoint: {
+        type: [Number],
+        required: false
+    },
     command: {
         type: String,
         required: false

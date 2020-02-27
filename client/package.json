@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@deck.gl/layers": "^8.0.16",
+    "@deck.gl/mapbox": "^8.0.16",
     "@nebula.gl/layers": "^0.17.2",
     "@nebula.gl/overlays": "^0.17.1",
     "@testing-library/jest-dom": "^4.2.4",

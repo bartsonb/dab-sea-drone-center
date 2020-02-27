@@ -188,8 +188,8 @@ export class Boat extends Component<BoatProps, BoatState> {
                         </div>
                         <div className="stat__card level-item has-text-centered">
                             <div>
-                                <p className="heading">Position</p>
-                                <p className="title">{this.state.position[0] + ' / ' + this.state.position[1]}</p>
+                                <p className="heading">Position (<a target={'_blank'} href={'https://www.google.de/maps/place/' + this.state.position}>Maps</a>)</p>
+                                <p className="title">{this.state.position[0] + ', ' + this.state.position[1]}</p>
                             </div>
                         </div>
                     </div>
@@ -200,15 +200,13 @@ export class Boat extends Component<BoatProps, BoatState> {
                     <MdKeyboardArrowDown style={{transform: 'rotate(' + (this.state.showMap ? 0 : 180) + 'deg)'}}/>
                 </div>
 
-                {
-                    this.state.showMap
+                {this.state.showMap
                         ? <Map
                             latitude={this.state.position[0]}
                             longitude={this.state.position[1]}
                             coordinates={this.state.coordinates}
                             id={this.props.id} />
-                        : ''
-                }
+                        : ''}
             </div>
         )
     }
