@@ -33,6 +33,10 @@ const BoatSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
+    lastSignOfLife: {
+        type: Number,
+        required: false
+    },
     wayPoints: {
         type: [[Number]],
         required: false
@@ -41,6 +45,8 @@ const BoatSchema = new mongoose.Schema({
         type: Boolean,
         required: false
     }
+}, {
+    timestamps: true
 });
 
 module.exports = BoatModel = mongoose.model('boats', BoatSchema);

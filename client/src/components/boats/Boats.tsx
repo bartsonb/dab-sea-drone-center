@@ -61,6 +61,7 @@ export class Boats extends Component<BoatsProps, BoatsState> {
                 heading={boat.heading}
                 wayPoints={boat.wayPoints}
                 position={boat.position}
+                lastSignOfLife={boat.lastSignOfLife}
                 availableCommands={this.state.availableCommands}
                 key={boat.id}/></Box>)
             : 'Loading ..';

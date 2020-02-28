@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './Boat.css';
+// @ts-ignore
+// import { store } from 'react-notifications-component';
 
 import {
     MdKeyboardArrowDown,
@@ -18,6 +20,7 @@ interface BoatProps {
     startPoint: number[],
     coordinates: number[][],
     position: number[],
+    lastSignOfLife: number,
     speed: object,
     heading: object,
     availableCommands: string[]
@@ -34,6 +37,7 @@ interface BoatState {
     wayPoints: number[][],
     startPoint: number[],
     coordinates: number[][],
+    lastSignOfLife: number,
     position: number[],
     speed: object,
     heading: object,
@@ -54,6 +58,7 @@ export class Boat extends Component<BoatProps, BoatState> {
             heading: props.heading,
             name: props.name,
             position: props.position,
+            lastSignOfLife: props.lastSignOfLife,
             speed: props.speed,
             startPoint: props.startPoint,
             wayPoints: props.wayPoints
@@ -137,6 +142,17 @@ export class Boat extends Component<BoatProps, BoatState> {
         this.setState({ showMap: !this.state.showMap });
     }
 
+    timePassed() {
+        let diff: any = new Date(new Date().getTime() - this.state.lastSignOfLife);
+        let daysPassed: any = diff / (1000 * 3600 * 24);
+
+        return (daysPassed > 0)
+            ?   (diff.getHours() - 1).toString().padStart(2, '0') + ':' +
+                diff.getMinutes().toString().padStart(2, '0') + ':' +
+                diff.getSeconds().toString().padStart(2, '0')
+            : daysPassed + ' ago';
+    }
+
     render() {
         return (
             <div className='boat'>
@@ -157,10 +173,12 @@ export class Boat extends Component<BoatProps, BoatState> {
                             </div>
                             <div className="dropdown-menu" id="dropdown-menu2" role="menu">
                                 <div className="dropdown-content">
+                                    {/*
                                     <div className="my-dropdown-item">
                                         <MdRoundedCorner size={'1.2em'} className={'dropdown__icons'} />
                                         <p>Add or edit fence.</p>
                                     </div>
+                                    */}
                                     <hr className="dropdown-divider" />
                                     <div className={'my-dropdown-item ' + (this.state.liveUpdates ? 'is-active' : '')} onClick={this.toggleLiveUpdates}>
                                         <MdUpdate size={'1.2em'} className={'dropdown__icons ' + (this.state.liveUpdates ? 'is-active' : '')} />
@@ -174,22 +192,28 @@ export class Boat extends Component<BoatProps, BoatState> {
 
                 <div className="level">
                     <div className="stat level-right">
-                        <div className="stat__card level-item has-text-centered">
+                        <div className="stat__card level-item has-text-centered is-6-mobile is-6-touch is-6-tablet">
                             <div>
                                 <p className="heading">Speed</p>
                                 <p className="title">{this.state.speed}</p>
                             </div>
                         </div>
-                        <div className="stat__card level-item has-text-centered">
+                        <div className="stat__card level-item has-text-centered is-6-mobile is-6-touch is-6-tablet">
                             <div>
                                 <p className="heading">Heading</p>
                                 <p className="title">{this.state.heading}</p>
                             </div>
                         </div>
-                        <div className="stat__card level-item has-text-centered">
+                        <div className="stat__card level-item has-text-centered is-6-mobile is-6-touch is-6-tablet">
                             <div>
                                 <p className="heading">Position (<a target={'_blank'} href={'https://www.google.de/maps/place/' + this.state.position}>Maps</a>)</p>
                                 <p className="title">{this.state.position[0] + ', ' + this.state.position[1]}</p>
+                            </div>
+                        </div>
+                        <div className="stat__card level-item has-text-centered is-6-mobile is-6-touch is-6-tablet">
+                            <div>
+                                <p className="heading">Last Sign Of Life</p>
+                                <p className="title">{this.state.lastSignOfLife ? this.timePassed() : 'Never'}</p>
                             </div>
                         </div>
                     </div>

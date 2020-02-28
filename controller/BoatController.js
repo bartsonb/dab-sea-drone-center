@@ -52,6 +52,8 @@ exports.update = (req, res) => {
 
     if (error) return res.send(error);
 
+    if (value.clear) value.lastSignOfLife = Date.now();
+
     BoatModel.findOneAndUpdate(
         { id: parseInt(req.params.id) },
         { ...value },
