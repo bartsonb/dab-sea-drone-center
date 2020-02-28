@@ -25,14 +25,6 @@ export default class Map extends Component {
     componentDidMount() {
         let initialFeatures = [];
 
-        if (this.props.longitude !== 'undefined' && this.props.latitude !== 'undefined') {
-            initialFeatures.push({
-                type: 'Feature',
-                properties: { renderType: 'Point', title: 'drone' },
-                geometry: { type:'Point', coordinates: [[ this.props.latitude, this.props.longitude ]] }
-            })
-        }
-
         if (this.props.coordinates !== 'undefined') {
             initialFeatures.push({
                 type: 'Feature',
@@ -110,23 +102,6 @@ export default class Map extends Component {
 
     _getFeatures = () => this._editorRef && this._editorRef.getFeatures();
 
-    _getDroneFeatureAsGeoJson = () => {
-        let features = this._getFeatures();
-
-        if (features && Array.isArray(features)) {
-            let droneFeature = features.find(feature => feature.hasOwnProperty('properties') && feature.properties.hasOwnProperty('title') && feature.properties.title === 'drone');
-
-            if (droneFeature) {
-                let feature = JSON.parse(JSON.stringify(droneFeature));
-                let [ lat, lng ] = feature.geometry.coordinates[0];
-                feature.geometry.coordinates = [ this.props.longitude ?? lng, this.props.latitude ?? lat ];
-                return feature;
-            }
-
-            return null;
-        }
-    };
-
     _saveFence = () => {
         let polygon = this._getFeatures().find(feature => feature.hasOwnProperty('properties') && feature.properties.hasOwnProperty('title') && feature.properties.title === 'fence');
 
@@ -151,10 +126,13 @@ export default class Map extends Component {
     render() {
         const { viewport, mode } = this.state;
 
-        let droneFeature = this._getDroneFeatureAsGeoJson();
-        let DroneLayer = (droneFeature)
+        let DroneLayer = (this.props.latitude && this.props.longitude)
             ? <React.Fragment>
-                <Source id="points" type="geojson" data={{ type: 'FeatureCollection', features: [droneFeature] }} />
+                <Source id="points" type="geojson" data={{ type: 'FeatureCollection', features: [{
+                        type: 'Feature',
+                        properties: { renderType: 'Point' },
+                        geometry: { type:'Point', coordinates: [ this.props.longitude, this.props.latitude ] }
+                    }] }} />
                 <Layer
                     id="points"
                     type="circle"
