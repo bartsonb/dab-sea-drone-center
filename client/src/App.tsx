@@ -1,9 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
+// @ts-ignore
+import ReactNotification from 'react-notifications-component'
+
 // CSS
 import './App.css';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
+import 'react-notifications-component/dist/theme.css'
 
 // Components
 import { Navbar } from "./components/layout/Navbar";
@@ -14,6 +18,7 @@ import { Boats } from "./components/boats/Boats";
 const App: React.FC = () => {
   return (
     <Router>
+        <ReactNotification />
         <Navbar />
 
         <section className={'container'}>

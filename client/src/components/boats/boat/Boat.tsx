@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import './Boat.css';
 // @ts-ignore
-// import { store } from 'react-notifications-component';
+import { store } from 'react-notifications-component';
 
 import {
     MdKeyboardArrowDown,
     MdKeyboardReturn,
     MdLocationSearching, MdMenu, MdRefresh,
-    MdRemoveCircleOutline, MdRoundedCorner,
+    MdRemoveCircleOutline,
     MdUpdate
 } from "react-icons/md"
 import Map from "../../map/Map";
@@ -117,7 +117,6 @@ export class Boat extends Component<BoatProps, BoatState> {
 
     liveUpdate() {
         if (this.state.liveUpdates) {
-            console.log( this.props.id + ' updated.');
             fetch('/api/boats/' + this.props.id)
                 .then((response:any) => response.json())
                 .then((response: any) => {
@@ -127,6 +126,30 @@ export class Boat extends Component<BoatProps, BoatState> {
                 });
         }
     }
+
+    showNotification() {
+        store.addNotification({
+            title: this.props.name + " updated",
+            message: "The coordinates of '" + this.props.name + "' have been updated.",
+            type: "success",
+            insert: "top",
+            container: "top-center",
+            slidingEnter: {
+                duration: 800,
+                timingFunction: 'ease-out',
+                delay: 0
+            },
+            slidingExit: {
+                duration: 800,
+                timingFunction: 'ease-out',
+                delay: 0
+            },
+            dismiss: {
+                duration: 3000,
+                onScreen: false
+            }
+        });
+    };
 
     toggleLiveUpdates() {
         localStorage.setItem('liveUpdates-id-' + this.props.id, '' + !this.state.liveUpdates);
@@ -165,27 +188,8 @@ export class Boat extends Component<BoatProps, BoatState> {
                     <div className="commandButtons level-right">
                         { this.getCommandButtons() }
 
-                        <div className={'dropdown ' + (this.state.showDropdown ? 'is-active' : '')}>
-                            <div className="dropdown-trigger">
-                                <button onClick={this.toggleDropdown} className="button" aria-haspopup="true" aria-controls="dropdown-menu2">
-                                    <span className="icon is-small"><MdMenu /></span>
-                                </button>
-                            </div>
-                            <div className="dropdown-menu" id="dropdown-menu2" role="menu">
-                                <div className="dropdown-content">
-                                    {/*
-                                    <div className="my-dropdown-item">
-                                        <MdRoundedCorner size={'1.2em'} className={'dropdown__icons'} />
-                                        <p>Add or edit fence.</p>
-                                    </div>
-                                    */}
-                                    <hr className="dropdown-divider" />
-                                    <div className={'my-dropdown-item ' + (this.state.liveUpdates ? 'is-active' : '')} onClick={this.toggleLiveUpdates}>
-                                        <MdUpdate size={'1.2em'} className={'dropdown__icons ' + (this.state.liveUpdates ? 'is-active' : '')} />
-                                        <p>Live Updates</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div className={'button commandButton commandButton__LIVEUPDATES ' + (this.state.liveUpdates ? 'is-active' : '')} onClick={this.toggleLiveUpdates} title={'Live Updates'}>
+                            <MdUpdate size={'1.2em'} className={'dropdown__icons ' + (this.state.liveUpdates ? 'is-active' : '')} />
                         </div>
                     </div>
                 </div>
@@ -229,9 +233,10 @@ export class Boat extends Component<BoatProps, BoatState> {
                             latitude={this.state.position[0]}
                             longitude={this.state.position[1]}
                             coordinates={this.state.coordinates}
+                            showNotification={this.showNotification}
                             id={this.props.id} />
                         : ''}
             </div>
         )
     }
-};
+}

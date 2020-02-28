@@ -68,10 +68,6 @@ export default class Map extends Component {
         });
     };
 
-    _updateFeatures = (features) => {
-        console.log('features: ', features);
-    };
-
     _renderDrawTools = () => {
         return (
             <div className="mapboxgl-ctrl-top-left">
@@ -117,8 +113,9 @@ export default class Map extends Component {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ coordinates: polygon.geometry.coordinates[0] })
             })
-                .then(response => response.json())
-                .then(response => console.log(response))
+                .then(response => {
+                    this.props.showNotification();
+                })
                 .catch(error => console.log(error));
         }
     };
