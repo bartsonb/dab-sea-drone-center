@@ -4,6 +4,7 @@ import './Boat.css';
 import { store } from 'react-notifications-component';
 
 import {
+    MdErrorOutline, MdHelpOutline,
     MdKeyboardArrowDown,
     MdKeyboardReturn,
     MdLocationSearching, MdMenu, MdRefresh,
@@ -96,10 +97,15 @@ export class Boat extends Component<BoatProps, BoatState> {
         switch(name) {
             case 'STOP':
                 return <MdRemoveCircleOutline className={'commandButton__icon'} />;
-            case 'SEARCH':
+            case 'START':
                 return <MdLocationSearching className={'commandButton__icon'} />;
             case 'RETURN':
                 return <MdKeyboardReturn className={'commandButton__icon'} />;
+            case 'TEST_FORWARD':
+            case 'TEST_RIGHT':
+            case 'TEST_LEFT':
+            case 'RANDOM':
+                return <MdHelpOutline className={'commandButton__icon'} />;
         }
     }
 
