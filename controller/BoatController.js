@@ -1,4 +1,4 @@
-const BoatModel = require('../models/BoatModel');
+const Boat = require('../models/Boat');
 const Joi = require('@hapi/joi');
 const { only, except, convertQuery, isEmpty } = require('../lib/helpers');
 
@@ -8,7 +8,7 @@ const { only, except, convertQuery, isEmpty } = require('../lib/helpers');
  * @returns Array of all boats
  */
 exports.index = (req, res) => {
-    BoatModel.find(
+    Boat.find(
         {},
         '-_id -__v',
         (err, boats) => {
@@ -22,7 +22,7 @@ exports.index = (req, res) => {
  * @returns Specific boat, selected by id
  */
 exports.show = (req, res) => {
-    BoatModel.findOne(
+    Boat.findOne(
         { id: parseInt(req.params.id) },
         '-_id -__v',
         (err, boat) => {
@@ -54,7 +54,7 @@ exports.update = (req, res) => {
 
     if (value.clear) value.lastSignOfLife = Date.now();
 
-    BoatModel.findOneAndUpdate(
+    Boat.findOneAndUpdate(
         { id: parseInt(req.params.id) },
         { ...value },
         { 

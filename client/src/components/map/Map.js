@@ -106,11 +106,9 @@ export default class Map extends Component {
             Array.isArray(polygon?.geometry?.coordinates[0]) &&
             polygon.geometry.coordinates[0].length > 0
         ) {
-            console.log(polygon.geometry.coordinates[0]);
-
             fetch('/api/boats/' + this.props.id, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'x-auth-token': this.props.token },
                 body: JSON.stringify({ coordinates: polygon.geometry.coordinates[0] })
             })
                 .then(response => {

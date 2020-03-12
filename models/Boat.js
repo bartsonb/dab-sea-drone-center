@@ -49,4 +49,4 @@ const BoatSchema = new mongoose.Schema({
     timestamps: true
 });
 
-module.exports = BoatModel = mongoose.model('boats', BoatSchema);
+module.exports = Boat = mongoose.model('boats', BoatSchema);

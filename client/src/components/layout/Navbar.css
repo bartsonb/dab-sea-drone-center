@@ -1,3 +1,7 @@
 .navbar {
     background: #efefef;
 }
+
+@media screen and (max-width: 768px) {
+
+}

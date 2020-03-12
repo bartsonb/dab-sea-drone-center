@@ -4,10 +4,11 @@ import './Boat.css';
 import { store } from 'react-notifications-component';
 
 import {
-    MdErrorOutline, MdHelpOutline,
+    MdHelpOutline,
     MdKeyboardArrowDown,
     MdKeyboardReturn,
-    MdLocationSearching, MdMenu, MdRefresh,
+    MdLocationSearching,
+    MdRefresh,
     MdRemoveCircleOutline,
     MdUpdate
 } from "react-icons/md"
@@ -24,7 +25,8 @@ interface BoatProps {
     lastSignOfLife: number,
     speed: object,
     heading: object,
-    availableCommands: string[]
+    availableCommands: string[],
+    token: any
 }
 
 interface BoatState {
@@ -69,6 +71,7 @@ export class Boat extends Component<BoatProps, BoatState> {
         this.toggleLiveUpdates = this.toggleLiveUpdates.bind(this);
         this.toggleDropdown = this.toggleDropdown.bind(this);
         this.toggleMap = this.toggleMap.bind(this);
+        this.showNotification = this.showNotification.bind(this);
 
         setInterval(this.liveUpdate, 5000);
     }
@@ -86,7 +89,7 @@ export class Boat extends Component<BoatProps, BoatState> {
 
             fetch('/api/boats/' + this.props.id, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'x-auth-token': this.props.token },
                 body: JSON.stringify({ command: command })
             })
                 .then(res => this.setState({ loading: false, command: command }));
@@ -123,7 +126,7 @@ export class Boat extends Component<BoatProps, BoatState> {
 
     liveUpdate() {
         if (this.state.liveUpdates) {
-            fetch('/api/boats/' + this.props.id)
+            fetch('/api/boats/' + this.props.id, { headers: { 'x-auth-token': this.props.token }})
                 .then((response:any) => response.json())
                 .then((response: any) => {
                     this.setState( {
@@ -135,8 +138,8 @@ export class Boat extends Component<BoatProps, BoatState> {
 
     showNotification() {
         store.addNotification({
-            title: this.props.name + " updated",
-            message: "The coordinates of '" + this.props.name + "' have been updated.",
+            title: this.state.name + " updated",
+            message: "The coordinates of '" + this.state.name + "' have been updated.",
             type: "success",
             insert: "top",
             container: "top-center",
@@ -172,14 +175,15 @@ export class Boat extends Component<BoatProps, BoatState> {
     }
 
     timePassed() {
-        let diff: any = new Date(new Date().getTime() - this.state.lastSignOfLife);
-        let daysPassed: any = diff / (1000 * 3600 * 24);
+        let diff = new Date().getTime() - this.state.lastSignOfLife;
+        let daysPassed = Math.round(diff / (1000 * 3600 * 24));
+        let newDate = new Date(diff);
 
-        return (daysPassed > 0)
-            ?   (diff.getHours() - 1).toString().padStart(2, '0') + ':' +
-                diff.getMinutes().toString().padStart(2, '0') + ':' +
-                diff.getSeconds().toString().padStart(2, '0')
-            : daysPassed + ' ago';
+        return (daysPassed <= 0)
+            ?   (newDate.getHours() - 1).toString().padStart(2, '0') + ':' +
+                newDate.getMinutes().toString().padStart(2, '0') + ':' +
+                newDate.getSeconds().toString().padStart(2, '0')
+            : daysPassed + ' days ago';
     }
 
     render() {
@@ -240,6 +244,7 @@ export class Boat extends Component<BoatProps, BoatState> {
                             longitude={this.state.position[1]}
                             coordinates={this.state.coordinates}
                             showNotification={this.showNotification}
+                            token={this.props.token}
                             id={this.props.id} />
                         : ''}
             </div>

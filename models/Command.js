@@ -15,4 +15,4 @@ const CommandSchema = new mongoose.Schema({
     }
 });
 
-module.exports = CommandModel = mongoose.model('command', CommandSchema);
+module.exports = Command = mongoose.model('command', CommandSchema);

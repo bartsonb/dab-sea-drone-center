@@ -1,4 +1,4 @@
-const CommandModel = require('../models/CommandModel');
+const Command = require('../models/Command');
 
 /**
  * @name    Commands
@@ -6,7 +6,7 @@ const CommandModel = require('../models/CommandModel');
  * @returns Array of available commands
  */
 exports.commands = (req, res) => {
-    CommandModel.find(
+    Command.find(
         {},
         '-_id -__v',
         (error, commands) => {

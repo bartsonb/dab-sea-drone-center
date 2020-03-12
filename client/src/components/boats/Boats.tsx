@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Boats.css';
 import { Box } from 'react-bulma-components';
 import { Boat } from "./boat/Boat";
+import SyncLoader from "react-spinners/SyncLoader";
 
 interface BoatsProps {}
 
@@ -11,6 +12,7 @@ interface BoatsState {
     loading: boolean,
     refreshing: boolean
     error: boolean,
+    token: any
 }
 
 export class Boats extends Component<BoatsProps, BoatsState> {
@@ -22,7 +24,8 @@ export class Boats extends Component<BoatsProps, BoatsState> {
             availableCommands: [],
             loading: true,
             refreshing: false,
-            error: false
+            error: false,
+            token: localStorage.getItem('token') ?? null
         };
     }
 
@@ -41,7 +44,7 @@ export class Boats extends Component<BoatsProps, BoatsState> {
     }
 
     api(url: string): Promise<any> {
-        return fetch(url)
+        return fetch(url, { headers: { 'x-auth-token': this.state.token }})
             .then(response => response.json())
             .catch(error => this.setState({
                 loading: false,
@@ -63,12 +66,13 @@ export class Boats extends Component<BoatsProps, BoatsState> {
                 position={boat.position}
                 lastSignOfLife={boat.lastSignOfLife}
                 availableCommands={this.state.availableCommands}
+                token={this.state.token}
                 key={boat.id}/></Box>)
-            : 'Loading ..';
+            :  <SyncLoader loading={true} size={10} css={`display: flex; justify-content: center;`} />;
 
         return (
             <div className='boats'>
-                {content}
+                { content }
             </div>
         )
     }
