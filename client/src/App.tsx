@@ -29,8 +29,8 @@ class App extends Component<AppProps, AppState> {
 
         this.state = {
             authenticated: false,
-            token: localStorage.getItem('token') ?? null,
-            user: JSON.parse(localStorage.getItem('user') as string) ?? null
+            token: localStorage.getItem('token') || null,
+            user: JSON.parse(localStorage.getItem('user') as string) || null
         };
 
         this.setUserCredentials = this.setUserCredentials.bind(this);

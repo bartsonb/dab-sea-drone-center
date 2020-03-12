@@ -63,13 +63,11 @@ export class Login extends Component<LoginProps, LoginState> {
             : '';
 
         return (
-            <section className="hero is-primary is-fullheight" style={{'background': '#333'}}>
+            <section className="hero is-primary is-fullheight" style={{'background': '#222'}}>
                 <div className="hero-body">
                     <div className="container">
                         <div className="columns is-centered">
-                            <div className="column is-5-tablet is-5-desktop is-5-widescreen">
-                                <img alt={'Sea Drone Center Logo'}
-                                     src={'https://png2.kisspng.com/sh/d82b1f665602d8265f9b6156f6056c7f/L0KzQYm3WMI2N6R2R91yc4Pzfri0jP9od15nitN3ZD3zgrFrlfN1NZVqi9twbj33grLrhf1iepwyhNHwb4OwdrLyhb1ud5RwRed5LXnvfMb6lL10e2I5S6c8MUa6QX65TgNzaV54h58AYki0RIjrU8czQWFpTZC9OUm6RIK5UME2O2Y2Uas6OEe3Roq6TwBvbz==/kisspng-logo-brand-product-design-trademark-logos-fake-mock-up-illust-ss143531671-2-sra-so-5b8147d37290d5.4997412015351991874693.png'} />
+                            <div className="column is-6-tablet is-6-desktop is-6-widescreen">
                                 <form action="" className="box" onSubmit={this.login}>
                                     <div className="field">
                                         <label htmlFor="" className="label">Email</label>

@@ -25,7 +25,7 @@ export class Boats extends Component<BoatsProps, BoatsState> {
             loading: true,
             refreshing: false,
             error: false,
-            token: localStorage.getItem('token') ?? null
+            token: localStorage.getItem('token') || null
         };
     }
 
